@@ -40,10 +40,25 @@ class Settings():
         grid_z = griddata((x, y), z, (grid_x, grid_y), method='cubic')
         return grid_z
     
-    def set_labels_corner(self, axis:object):
+    def set_xylabels(self, axis:object):
         """Set labels"""
         self.axis = axis
         self.axis.set_xlabel('x (mm)')
         self.axis.set_ylabel('z (mm)')
+
+    def heatmap_parameters(self, x:list, y:list):
+        """Return parameters for heatmap"""
+        self.x = x
+        self.y = y
+        kwargs = {
+            'extent': (self.x.min(), self.x.max(), self.y.min(), self.y.max()),
+            'origin': 'lower',
+            'cmap': 'jet',
+            'vmin': 0,
+            'vmax': 1,
+            'aspect': 'equal',
+            'interpolation': 'hanning'
+        }
+        return kwargs
 
 

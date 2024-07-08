@@ -28,23 +28,14 @@ def main():
             x, y, z = st.Settings().read_csv(files[i])
             grid_z = st.Settings().generate_grid(x, y, z/P_MAX)
 
-            kwargs = {
-                'extent': (x.min(), x.max(), y.min(), y.max()),
-                'origin': 'lower',
-                'cmap': 'jet',
-                'vmin': 0,
-                'vmax': 1,
-                'aspect': 'equal',
-                'interpolation': 'hanning'
-            }
-            
+            kwargs = st.Settings().heatmap_parameters(x, y)
             # Plot heatmap
             ax_flat[i].imshow(grid_z.T, **kwargs)
             ax_flat[i].set_ylim([0, 10])
             ax_flat[i].set_xlim([-7, 7])
             ax_flat[i].set_title(f'{dts[i]:.1f} \u03bcs')
             if i==5:
-                st.Settings().set_labels_corner(ax_flat[i])
+                st.Settings().set_xylabels(ax_flat[i])
                 
         cbar = fig.colorbar(ax_flat[0].images[0], ax=ax_flat, orientation='vertical', pad=0.02)
         cbar.set_label('Acoustic pressure (a.u.)', rotation=270, labelpad=24)
