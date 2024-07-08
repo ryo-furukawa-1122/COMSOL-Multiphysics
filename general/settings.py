@@ -39,5 +39,11 @@ class Settings():
         grid_x, grid_y = np.mgrid[x.min():x.max():partition*1j, y.min():y.max():partition*1j]
         grid_z = griddata((x, y), z, (grid_x, grid_y), method='cubic')
         return grid_z
+    
+    def set_labels_corner(self, axis:object):
+        """Set labels"""
+        self.axis = axis
+        self.axis.set_xlabel('x (mm)')
+        self.axis.set_ylabel('z (mm)')
 
 
