@@ -1,5 +1,6 @@
 # %%
 import general.settings as st
+import general.loadings as ld
 import glob
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,16 +8,17 @@ import numpy as np
 def main():
     """Main function"""
     # Settings
-    directory, ids = st.Settings().read_config()
+    directory, ids, scales = ld.Loadings().read_config()
     st.Settings().plot_theme()
     PLOT_SHAPE = [2, 5]
     dts = np.arange(0, 2, 0.2)
-    P_MAX = 40e3  # For nomalization
 
-    for id in ids:
+    for id, scale in zip(ids, scales):
+        ld.Loadings().log(id)
         # Explore csv files in the working directory
         files:list = sorted(glob.glob(f'{directory}/{id}/*.csv'))
         N:int = len(files)
+        p_max:float = scale  # For nomalization
 
         # Create subplots
         fig, ax = plt.subplots(*PLOT_SHAPE, figsize=(24, 8), dpi=900)
@@ -25,10 +27,10 @@ def main():
 
         for i in range(N):
             # Read csv file
-            x, y, z = st.Settings().read_csv(files[i])
-            grid_z = st.Settings().generate_grid(x, y, z/P_MAX)
+            x, y, z = ld.Loadings().read_csv(files[i])
+            grid_z = st.Settings().generate_grid(x, y, z)
 
-            kwargs = st.Settings().heatmap_parameters(x, y)
+            kwargs = st.Settings().heatmap_parameters(x, y, p_max)
             # Plot heatmap
             ax_flat[i].imshow(grid_z.T, **kwargs)
             ax_flat[i].set_ylim([0, 10])
@@ -38,7 +40,7 @@ def main():
                 st.Settings().set_xylabels(ax_flat[i])
                 
         cbar = fig.colorbar(ax_flat[0].images[0], ax=ax_flat, orientation='vertical', pad=0.02)
-        cbar.set_label('Acoustic pressure (a.u.)', rotation=270, labelpad=24)
+        cbar.set_label('Acoustic pressure (kPa)', rotation=270, labelpad=24)
         # plt.show()
         plt.savefig(f'{directory}/{id}/{id}.png', bbox_inches='tight')
         plt.close()
