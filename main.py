@@ -4,6 +4,8 @@ import general.loadings as ld
 import glob
 import matplotlib.pyplot as plt
 import numpy as np
+from rich.console import Console
+from time import sleep
 
 def main():
     """Main function"""
@@ -12,6 +14,7 @@ def main():
     st.Settings().plot_theme()
     PLOT_SHAPE = [2, 5]
     dts = np.arange(0, 2, 0.2)
+    console = Console()
 
     for id, scale in zip(ids, scales):
         ld.Loadings().log(id)
@@ -25,26 +28,30 @@ def main():
         plt.subplots_adjust(hspace=0.1, wspace=0.2)
         ax_flat = ax.flatten()
 
-        for i in range(N):
-            # Read csv file
-            x, y, z = ld.Loadings().read_csv(files[i])
-            grid_z = st.Settings().generate_grid(x, y, z)
+        with console.status("[bold magenta]Processing...[/bold magenta]") as status:
+            for i in range(N):
+                sleep(1)
+                # Read csv file
+                x, y, z = ld.Loadings().read_csv(files[i])
+                grid_z = st.Settings().generate_grid(x, y, z)
 
-            kwargs = st.Settings().heatmap_parameters(x, y, p_max)
-            # Plot heatmap
-            ax_flat[i].imshow(grid_z.T, **kwargs)
-            ax_flat[i].set_ylim([0, 10])
-            ax_flat[i].set_xlim([-7, 7])
-            ax_flat[i].set_title(f'{dts[i]:.1f} \u03bcs')
-            if i==5:
-                st.Settings().set_xylabels(ax_flat[i])
+                kwargs = st.Settings().heatmap_parameters(x, y, p_max)
+                # Plot heatmap
+                ax_flat[i].imshow(grid_z.T, **kwargs)
+                ax_flat[i].set_ylim([0, 10])
+                ax_flat[i].set_xlim([-7, 7])
+                ax_flat[i].set_title(f'{dts[i]:.1f} \u03bcs')
+
+                if i==5:
+                    st.Settings().set_xylabels(ax_flat[i])
                 
-        cbar = fig.colorbar(ax_flat[0].images[0], ax=ax_flat, orientation='vertical', pad=0.02)
-        cbar.set_label('Acoustic pressure (kPa)', rotation=270, labelpad=24)
-        # plt.show()
-        plt.savefig(f'{directory}/{id}/{id}.png', bbox_inches='tight')
-        plt.close()
+                console.log(f'[magenta] Processed: {dts[i]:.1f} \u03bcs  [/magenta]')
 
+            cbar = fig.colorbar(ax_flat[0].images[0], ax=ax_flat, orientation='vertical', pad=0.02)
+            cbar.set_label('Acoustic pressure (kPa)', rotation=270, labelpad=24)
+            # plt.show()
+            plt.savefig(f'{directory}/{id}/{id}.png', bbox_inches='tight')
+            plt.close()
 
 if __name__ == "__main__":
     main()

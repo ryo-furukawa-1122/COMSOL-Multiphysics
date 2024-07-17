@@ -28,4 +28,4 @@ class Loadings():
     def log(self, id:str):
         """Log message"""
         self.id = id
-        print(f"[bold blue]Processing {id}...[/bold blue]")
+        print(f"[bold cyan]{id}[/bold cyan]")
