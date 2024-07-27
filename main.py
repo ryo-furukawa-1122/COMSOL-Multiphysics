@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from rich.console import Console
 from time import sleep
+import analysis.analysis as an
 
 def main():
     """Main function"""
@@ -14,7 +15,12 @@ def main():
     st.Settings().plot_theme()
     PLOT_SHAPE = [2, 5]
     dts = np.arange(0, 2, 0.2)
+    peak_pressures = np.zeros([len(ids), len(dts)])
+    peak_positions = np.zeros([len(ids), len(dts)])
     console = Console()
+    X_MIN, X_MAX = -7, 7
+    Y_MIN, Y_MAX = 0, 10
+    j = 0
 
     for id, scale in zip(ids, scales):
         ld.Loadings().log(id)
@@ -38,20 +44,34 @@ def main():
                 kwargs = st.Settings().heatmap_parameters(x, y, p_max)
                 # Plot heatmap
                 ax_flat[i].imshow(grid_z.T, **kwargs)
-                ax_flat[i].set_ylim([0, 10])
-                ax_flat[i].set_xlim([-7, 7])
+                ax_flat[i].set_ylim([Y_MIN, Y_MAX])
+                ax_flat[i].set_xlim([X_MIN, X_MAX])
                 ax_flat[i].set_title(f'{dts[i]:.1f} \u03bcs')
 
                 if i==5:
                     st.Settings().set_xylabels(ax_flat[i])
-                
+
+                peak_pressures[j, i], peak_positions[j, i] = an.Analysis().get_maximum(
+                    x = x, 
+                    y = y, 
+                    z = z, 
+                    x_min = X_MIN, 
+                    x_max = X_MAX, 
+                    y_min = Y_MIN, 
+                    y_max = Y_MAX
+                    )
+
                 console.log(f'[magenta] Processed: {dts[i]:.1f} \u03bcs  [/magenta]')
+            
+            j += 1
 
             cbar = fig.colorbar(ax_flat[0].images[0], ax=ax_flat, orientation='vertical', pad=0.02)
             cbar.set_label('Acoustic pressure (kPa)', rotation=270, labelpad=24)
-            # plt.show()
             plt.savefig(f'{directory}/{id}/{id}.png', bbox_inches='tight')
             plt.close()
+
+    console.log(f'[bold green]Summarize[/bold green]')
+    an.Analysis().plot_peak_and_dt(peak_pressures, peak_positions, dts, directory)
 
 if __name__ == "__main__":
     main()
