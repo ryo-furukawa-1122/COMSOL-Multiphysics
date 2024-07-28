@@ -10,8 +10,8 @@ class Loadings():
 
     def read_config(self):
         """Return the path of working directory, ids, and scales of the devices"""
-        f = open('../config.json')
-        # f = open('config.json')
+        # f = open('../config.json')
+        f = open('config.json')
         config = json.load(f)
         self.directory = config['directory']
         self.ids = config['ids']

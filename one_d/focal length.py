@@ -71,13 +71,15 @@ kwargs = {
     "marker": "o"
 }
 colors = ["#1C2938", "#FC5185", "#3FC1C9"]
-dt_s = [dt[i] for i in range(len(dt)) if i != 5]
+dt_s = []
 primary = []
 secondary = []
 for i in range(N):
     primary.append(peak_positions[i][0])
-    if len(peak_positions[i]) != 1:
+    if len(peak_positions[i]) != 1 and peak_positions[i][1] < 7:
         secondary.append(peak_positions[i][1])
+        dt_s.append(dt[i])
+
 plt.figure(dpi=900)
 plt.plot(dt, primary, markeredgecolor=colors[0], label=peak_labels[0], **kwargs)
 plt.plot(dt, primary, color=colors[0], linewidth=2, linestyle="dashed")

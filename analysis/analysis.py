@@ -20,7 +20,7 @@ class Analysis():
     def find_local_maxima(self, x, y):
         """Find local maxima"""
         from scipy.signal import find_peaks
-        peaks, _ = find_peaks(y, distance=1, prominence=0.1)
+        peaks, _ = find_peaks(y, distance=1, prominence=0.08)
         return x[peaks], y[peaks]
     
     def plot_peak_and_dt(self, peak_pressures:np.ndarray[float], peak_positions:np.ndarray[float], dts:np.ndarray[float], directory:str):
