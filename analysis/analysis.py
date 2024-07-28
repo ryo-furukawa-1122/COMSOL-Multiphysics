@@ -17,6 +17,12 @@ class Analysis():
         y_peak = self.y[mask][np.argmax(self.z[mask])]
         return z_peak, y_peak
     
+    def find_local_maxima(self, x, y):
+        """Find local maxima"""
+        from scipy.signal import find_peaks
+        peaks, _ = find_peaks(y, distance=1, prominence=0.1)
+        return x[peaks], y[peaks]
+    
     def plot_peak_and_dt(self, peak_pressures:np.ndarray[float], peak_positions:np.ndarray[float], dts:np.ndarray[float], directory:str):
         """Plot the peak value and dt"""
         self.peak_pressures = peak_pressures
