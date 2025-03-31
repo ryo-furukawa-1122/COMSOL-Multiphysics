@@ -32,7 +32,7 @@ class Analysis():
 
         colors = ["#1C2938", "#FC5185", "#3FC1C9"]
         kwargs1 = {
-            "linestyle": "solid",
+            "linestyle": "dashed",
             "linewidth": 2
         }
         kwargs2 = {
@@ -43,10 +43,10 @@ class Analysis():
         }
         
         plt.figure(dpi=900)
-        for j in range(3):
+        for j in range(1):
             plt.plot(self.dts, self.peak_pressures[j, :], color=colors[j], **kwargs1)
             plt.plot(self.dts, self.peak_pressures[j, :], markeredgecolor=colors[j], **kwargs2)
-        plt.xlabel(" (\u03bcs)")
+        plt.xlabel("Delay time (\u03bcs)")
         plt.ylabel("Acoustic pressure (kPa)")
         plt.savefig(f"{self.directory}/peak_pressure.png", bbox_inches="tight")
         plt.close()

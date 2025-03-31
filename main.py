@@ -67,7 +67,7 @@ def main():
 
             cbar = fig.colorbar(ax_flat[0].images[0], ax=ax_flat, orientation='vertical', pad=0.02)
             cbar.set_label('Acoustic pressure (kPa)', rotation=270, labelpad=24)
-            plt.savefig(f'{directory}/{id}/{id}.png', bbox_inches='tight')
+            # plt.savefig(f'{directory}/{id}/{id}.png', bbox_inches='tight')
             plt.close()
 
     console.log(f'[bold green]Summarize[/bold green]')
