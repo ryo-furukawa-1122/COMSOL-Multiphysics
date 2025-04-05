@@ -92,3 +92,19 @@ plt.savefig(f"{directory}/{ids[0]}/focal length/3-1-2_focal_length_peak.png", bb
 plt.close()
 
 # %%
+# Save the data to a CSV file
+save_data_primary = pd.DataFrame({
+    "Delay time (\u03bcs)": dt,
+    "Focal length (mm)": primary
+})
+# print(save_data_primary)
+
+directory_save_csv = f"{directory}/{ids[0]}/focal length/"
+save_data_primary.to_csv(f"{directory_save_csv}/focal_length_primary.csv", index=False)
+
+save_data_secondary = pd.DataFrame({
+    "Delay time (\u03bcs)": dt_s,
+    "Focal length (mm)": secondary
+})
+
+save_data_secondary.to_csv(f"{directory_save_csv}/focal_length_secondary.csv", index=False)
